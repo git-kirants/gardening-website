@@ -1,0 +1,102 @@
+{% extends 'home/layout.html' %}
+
+{% block content %}
+<!-- Hero Carousel -->
+<div id="heroCarousel" class="carousel slide rounded-4 overflow-hidden shadow-sm" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+    </div>
+    
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="overlay"></div>
+            <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae" class="d-block w-100" alt="Garden Tools">
+            <div class="carousel-caption text-start">
+                <h1 class="display-4 fw-bold">Welcome to GreenThumb Community</h1>
+                <p class="lead">Your one-stop destination for gardening expertise and community</p>
+                {% if user.is_authenticated %}
+                    {% if user.is_provider %}
+                        <a href="{% url 'create_service' %}" class="btn btn-success btn-lg mt-3">Offer a Service</a>
+                    {% elif user.is_customer %}
+                        <a href="{% url 'register_provider' %}" class="btn btn-success btn-lg mt-3">Become a Provider</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'register' %}" class="btn btn-success btn-lg mt-3">Join Community</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="overlay"></div>
+            <img src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2" class="d-block w-100" alt="Vegetables">
+            <div class="carousel-caption">
+                <h2>Grow Your Own Food</h2>
+                <p>Learn sustainable gardening practices from experts</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="overlay"></div>
+            <img src="https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e" class="d-block w-100" alt="Flowers">
+            <div class="carousel-caption">
+                <h2>Beautiful Gardens</h2>
+                <p>Create your own paradise with our gardening tips</p>
+            </div>
+        </div>
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<!-- Featured Content -->
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Our Services</h2>
+        {% if user.is_authenticated and user.is_provider %}
+            <a href="{% url 'create_service' %}" class="btn btn-success">
+                <i class="fas fa-plus-circle me-2"></i>Create Service
+            </a>
+        {% endif %}
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm hover-card">
+                <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b" 
+                     class="card-img-top" alt="Professional Services">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-3">Professional Services</h5>
+                    <p class="card-text text-muted">Find expert gardeners and landscapers in your area.</p>
+                    <a href="#" class="btn btn-outline-success mt-3">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm hover-card">
+                <img src="https://images.unsplash.com/photo-1524247108137-732e0f642303" 
+                     class="card-img-top" alt="Community Events">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-3">Community Events</h5>
+                    <p class="card-text text-muted">Join local gardening events and workshops.</p>
+                    <a href="#" class="btn btn-outline-success mt-3">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm hover-card">
+                <img src="https://images.unsplash.com/photo-1557429287-b2e26467fc2b" 
+                     class="card-img-top" alt="Expert Tips">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-3">Expert Tips</h5>
+                    <p class="card-text text-muted">Learn from our collection of gardening guides.</p>
+                    <a href="#" class="btn btn-outline-success mt-3">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

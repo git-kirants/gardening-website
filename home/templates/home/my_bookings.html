@@ -1,0 +1,128 @@
+{% extends 'home/layout.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">{% if user.is_provider %}Service Bookings{% else %}My Bookings{% endif %}</h2>
+
+    {% if messages %}
+    <div class="messages mb-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if bookings %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Service</th>
+                    <th>{% if user.is_provider %}Customer{% else %}Provider{% endif %}</th>
+                    <th>Date & Time</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            {% if booking.service.image %}
+                                <img src="{{ booking.service.image.url }}" class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                            {% endif %}
+                            <div>
+                                <strong>{{ booking.service.title }}</strong>
+                                <br>
+                                <small class="text-muted">${{ booking.service.price }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        {% if user.is_provider %}
+                            {{ booking.customer.username }}
+                        {% else %}
+                            {{ booking.service.provider.username }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ booking.booking_date|date:"M j, Y" }}<br>
+                        <small class="text-muted">{{ booking.booking_time|time:"g:i A" }}</small>
+                    </td>
+                    <td>
+                        {{ booking.name }}<br>
+                        <small class="text-muted">{{ booking.phone_number }}</small>
+                    </td>
+                    <td>
+                        {% if booking.status == 'pending' %}
+                            <span class="badge bg-warning">Request Sent</span>
+                        {% elif booking.status == 'accepted' %}
+                            <span class="badge bg-success">Accepted</span>
+                        {% elif booking.status == 'rejected' %}
+                            <span class="badge bg-danger">Rejected</span>
+                        {% elif booking.status == 'completed' %}
+                            <span class="badge bg-info">Completed</span>
+                        {% elif booking.status == 'cancelled' %}
+                            <span class="badge bg-secondary">Cancelled</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.is_provider %}
+                            {% if booking.status == 'pending' %}
+                            <form method="post" action="{% url 'update_booking_status' booking.id %}" class="d-flex gap-2">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="accept" class="btn btn-success btn-sm">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </form>
+                            {% elif booking.status == 'accepted' %}
+                            <form method="post" action="{% url 'update_booking_status' booking.id %}" class="d-flex gap-2">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="complete" class="btn btn-info btn-sm">
+                                    <i class="fas fa-check-double"></i> Complete
+                                </button>
+                                <button type="submit" name="action" value="cancel" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-ban"></i> Cancel
+                                </button>
+                            </form>
+                            {% endif %}
+                        {% else %}
+                            {% if booking.status == 'pending' %}
+                                <form method="post" action="{% url 'update_booking_status' booking.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" name="action" value="cancel" class="btn btn-secondary btn-sm">
+                                        <i class="fas fa-ban"></i> Cancel
+                                    </button>
+                                </form>
+                            {% elif booking.status == 'accepted' %}
+                                <span class="text-success"><i class="fas fa-check-circle"></i> Service Confirmed</span>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-calendar-alt text-muted fa-3x mb-3"></i>
+        <h3 class="text-muted">No Bookings Found</h3>
+        {% if not user.is_provider %}
+        <p class="text-muted mb-4">Start browsing services to make your first booking!</p>
+        <a href="{% url 'browse_services' %}" class="btn btn-success">
+            <i class="fas fa-search me-2"></i>Browse Services
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

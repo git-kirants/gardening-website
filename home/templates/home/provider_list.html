@@ -1,0 +1,28 @@
+{% extends 'home/layout.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Service Providers</h2>
+    <div class="row">
+        {% for provider in providers %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ provider.business_name|default:provider.user.get_full_name }}</h5>
+                    <p class="card-text"><strong>Location:</strong> {{ provider.service_location }}</p>
+                    <p class="card-text"><strong>Services:</strong> {{ provider.services_offered|join:", " }}</p>
+                    <p class="card-text"><strong>Experience:</strong> {{ provider.years_of_experience }} years</p>
+                    <p class="card-text"><strong>Rate:</strong> ${{ provider.hourly_rate }}/hour</p>
+                    <a href="#" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center">No service providers found.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

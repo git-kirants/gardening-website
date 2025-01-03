@@ -1,0 +1,29 @@
+{% extends 'home/layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Register as Provider - GreenThumb{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="text-center mb-4">Register as Service Provider</h2>
+            
+            
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                Register as Provider
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,75 @@
+{% extends 'home/layout.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Browse Services</h2>
+
+    <!-- Search and Filter Form -->
+    <form method="get" class="mb-4">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Search services..." value="{{ search_query }}">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <select name="category" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    {% for code, name in categories %}
+                        <option value="{{ code }}" {% if code == current_category %}selected{% endif %}>
+                            {{ name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </form>
+
+    {% if services %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for service in services %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                {% if service.image %}
+                    <img src="{{ service.image.url }}" class="card-img-top" alt="{{ service.title }}" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ service.title }}</h5>
+                    <p class="card-text text-muted">{{ service.description|truncatewords:20 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-primary">{{ service.get_category_display }}</span>
+                        <span class="badge"
+                            {% if service.status == 'available' %}bg-success
+                            {% elif service.status == 'unavailable' %}bg-warning
+                            {% else %}bg-secondary{% endif %}">
+                            {{ service.get_status_display }}
+                        </span>
+                        <span class="text-success fw-bold">${{ service.price }}</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt me-1"></i>{{ service.location }}
+                        </small>
+                        <a href="{% url 'service_detail' service.slug %}" class="btn btn-outline-primary btn-sm">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-search text-muted fa-3x mb-3"></i>
+        <h3 class="text-muted">No Services Found</h3>
+        <p class="text-muted">Try adjusting your search criteria</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'home/layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            {% if user.is_authenticated and user.user_type == 'provider' and user == service.provider %}
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <h2 class="text-center mb-4">Update Service</h2>
+
+                        {% if messages %}
+                        <div class="messages mb-4">
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <form method="post" enctype="multipart/form-data" novalidate>
+                            {% csrf_token %}
+                            <div class="row g-3">
+                                <!-- Title and Category -->
+                                <div class="col-md-8">
+                                    {{ form.title|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.category|as_crispy_field }}
+                                </div>
+
+                                <!-- Price and Duration -->
+                                <div class="col-md-6">
+                                    {{ form.price|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.duration|as_crispy_field }}
+                                </div>
+
+                                <!-- Location -->
+                                <div class="col-12">
+                                    {{ form.location|as_crispy_field }}
+                                </div>
+
+                                <!-- Description -->
+                                <div class="col-12">
+                                    {{ form.description|as_crispy_field }}
+                                </div>
+
+                                <!-- Image -->
+                                <div class="col-12">
+                                    {{ form.image|as_crispy_field }}
+                                </div>
+
+                                <!-- Availability -->
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        {{ form.is_available }}
+                                        <label class="form-check-label" for="{{ form.is_available.id_for_label }}">
+                                            Service is currently available
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Buttons -->
+                                <div class="col-12">
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
+                                            <i class="fas fa-times me-1"></i>Cancel
+                                        </button>
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-save me-1"></i>Update Service
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-danger">
+                    <h4 class="alert-heading">Access Denied</h4>
+                    <p>You do not have permission to edit this service.</p>
+                    <hr>
+                    <p class="mb-0">
+                        <a href="{% url 'service_detail' service.slug %}" class="btn btn-outline-danger">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Service
+                        </a>
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

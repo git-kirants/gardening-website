@@ -1,0 +1,61 @@
+{% extends 'home/layout.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <!-- Title -->
+                    <h2 class="text-center mb-4">Create Account</h2>
+                    
+                    <!-- Messages Section -->
+                    {% if messages %}
+                    <div class="messages mb-4">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Registration Form -->
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <!-- Form Fields -->
+                            {% for field in form %}
+                            <div class="{% if field.name == 'username' or field.name == 'email' %}col-12
+                                {% elif field.name == 'password1' or field.name == 'password2' %}col-md-6
+                                {% else %}col-12{% endif %}">
+                                {{ field|as_crispy_field }}
+                            </div>
+                            {% endfor %}
+                            
+                            <!-- Submit Button -->
+                            <div class="col-12">
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="fas fa-user-plus me-2"></i>Register
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Login Link -->
+                        <div class="text-center mt-4">
+                            <p class="text-muted mb-0">
+                                Already have an account? 
+                                <a href="{% url 'login' %}" class="text-success">Login here</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
